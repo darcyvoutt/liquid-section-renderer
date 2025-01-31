@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -24,27 +24,27 @@ jobs:
 
       - name: Install dependencies
         run: npm install terser -g
-      
+
       - name: Configure Git
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-      
+
       - name: Create or update release branch
         run: |
           git checkout -B release
           git reset --hard ${{ github.event.release.tag_name }}
-      
+
       - name: Minify JavaScript
         run: |
           terser liquid-section-renderer.js -o liquid-section-renderer.min.js -c -m
-      
+
       - name: Commit and push minified file
         run: |
           git add liquid-section-renderer.min.js
           git commit -m "Add minified version for release ${{ github.event.release.tag_name }}"
           git push -f origin release
-      
+
       - name: Upload minified file to release
         uses: softprops/action-gh-release@v1
         with:
