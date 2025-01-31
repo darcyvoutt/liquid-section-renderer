@@ -1,0 +1,31 @@
+name: Minify JS on Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install terser -g
+      
+      - name: Minify JavaScript
+        run: |
+          terser liquid-section-renderer.js -o liquid-section-renderer.min.js -c -m
+      
+      - name: Upload minified file to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: liquid-section-renderer.min.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
