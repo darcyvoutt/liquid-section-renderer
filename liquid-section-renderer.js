@@ -317,7 +317,7 @@ class LiquidSectionRenderer extends HTMLElement {
             break;
           case 'replace':
           case null:
-            targetElement.innerHTML = sectionElement.innerHTML;
+            targetElement.replaceChildren(sectionElement);
             break;
         }
       });
