@@ -149,6 +149,7 @@ class LiquidSectionRenderer extends HTMLElement {
       }
 
       const boundListener = (event) => {
+        event.preventDefault();
         this._debounce(() => this._handleEvent(event, trigger), this.debounceTime);
       }
 
