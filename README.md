@@ -2,7 +2,9 @@
 
 A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.dev/docs/api/ajax/section-rendering) to dynamically render Shopify sections via AJAX requests.
 
-## Example Usage
+## Example
+
+### Basic Usage
 
 ```html
 <liquid-section-renderer
@@ -33,6 +35,31 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
   >
     Update Multiple Sections
   </button>
+</liquid-section-renderer>
+```
+
+### Predictive Search w/ Alpine JS
+
+```html
+<liquid-section-renderer
+    x-data="{ query: '' }"
+    :render-url="`{{ routes.predictive_search_url }}?q=${query}&resources[type]=product`"
+    loading-selector="#searchLoading"
+  >
+    <input
+      name="q"
+      x-model="query"
+      class="border rounded py-2 px-6"
+      placeholder="Search: product name"
+      section="predictive-search"
+      target="#searchResult"
+      update-mode="replace"
+      trigger
+    />
+
+    <div id="searchLoading" style="display: none;">...Loading</div>
+    <div id="searchResult"></div>
+  </div>
 </liquid-section-renderer>
 ```
 
