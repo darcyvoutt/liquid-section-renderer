@@ -57,7 +57,7 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 | `trigger` | `Boolean` | `none` | Determines which element triggers a section update. |
 | `section` | `String` | `none` | The file name reference of the section to render found in `sections/<file-name>.liquid`. |
 | `target` | `String` | `none` | Uses `querySelector` for the element to update with new section content. |
-| `updates` | `JSON` | `none` | Array of section/target pairs for updating multiple sections. Format: `[{"section": "section-id", "target": "#selector"}]`. |
+| `updates` | `Array` | `none` | Array of section/target pairs for updating multiple sections. Format: `[{"section": "section-id", "target": "#selector"}]`. |
 | `update-mode` | `String` | `replace` | How the new section content is inserted. Accepts `replace`, `append`/`after`, or `prepend`/`before`. |
 
 ## Event Listeners
