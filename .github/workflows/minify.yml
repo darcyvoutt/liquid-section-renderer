@@ -43,6 +43,7 @@ jobs:
         run: |
           git add liquid-section-renderer.min.js
           git commit -m "Add minified version for release ${{ github.event.release.tag_name }}"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git push -f origin release
 
       - name: Upload minified file to release
