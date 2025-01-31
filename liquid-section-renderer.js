@@ -30,7 +30,6 @@ class LiquidSectionRenderer extends HTMLElement {
     this._loadingElement = null;
     this._timeoutId = null;
     this._triggers = this.querySelectorAll(`[${this._attrs.trigger}]`) || null;
-    this._urlBase = window?.Shopify?.routes?.root || window.location.pathname;
 
     // Parent Attributes
     this.debounceTime = parseInt(this.getAttribute('debounce'), 10) || 300;
@@ -39,7 +38,7 @@ class LiquidSectionRenderer extends HTMLElement {
     this.historyMode = this.getAttribute('history-mode') || null;
     this.scoped = (this.getAttribute('scoped') || 'true').toLowerCase() === 'true';
     this.timeout = parseInt(this.getAttribute('timeout'), 10) || 5000;
-    this.renderUrl = this.getAttribute('render-url') || this._urlBase;
+    this.renderUrl = this.getAttribute('render-url') || window.location.pathname;
     this.updateUrl = this.getAttribute('update-url') || null;
     this.updateTitle = this.getAttribute('update-title') || null;
   }

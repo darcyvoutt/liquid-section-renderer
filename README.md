@@ -44,7 +44,7 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 | `history-mode` | `String` | `none` | Controls URL history behavior. Accepts `add`/`push`, or `replace`. |
 | `loading-selector` | `String` | `none` | Uses `querySelector` to find the loading element. If not set, no loading indicator will be shown. |
 | `loading-class` | `String` | `none` | Class to add to loading element while loading. If unset and a `loading-selector` is provided, the component will inline `display: none`. |
-| `render-url` | `String` | `Shopify.routes.root` | The URL to request the section from. If `Shopify.routes` is not available, defaults to `location.pathname`. |
+| `render-url` | `String` | `location.pathname` | Specify the URL to request the section from. |
 | `scoped` | `Boolean` | `true` | If set `false`, `querySelector` is scoped the entire `document`, otherwise is scoped to the component. |
 | `timeout` | `Number` | `5000` | The time to wait for a response in milliseconds before cancelling the request. |
 | `update-url` | `String` | `none` | Update the URL after section is updated. |
@@ -57,7 +57,7 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 | `trigger` | `Boolean` | `none` | Determines which element triggers a section update. |
 | `section` | `String` | `none` | The file name reference of the section to render found in `sections/<file-name>.liquid`. |
 | `target` | `String` | `none` | Uses `querySelector` for the element to update with new section content. |
-| `updates` | `Array` | `none` | Array of section/target pairs for updating multiple sections. Format: `[{"section": "section-id", "target": "#selector"}]`. |
+| `updates` | `JSON Array` | `none` | Array of section/target pairs for updating multiple sections. Format: `[{"section": "section-id", "target": "#selector"}]`. |
 | `update-mode` | `String` | `replace` | How the new section content is inserted. Accepts `replace`, `append`/`after`, or `prepend`/`before`. |
 
 ## Event Listeners
