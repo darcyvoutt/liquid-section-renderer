@@ -38,7 +38,6 @@ class LiquidSectionRenderer extends HTMLElement {
     this.historyMode = this.getAttribute('history-mode') || null;
     this.scoped = (this.getAttribute('scoped') || 'true').toLowerCase() === 'true';
     this.timeout = parseInt(this.getAttribute('timeout'), 10) || 5000;
-    this.renderUrl = this.getAttribute('render-url') || window.location.pathname;
     this.updateUrl = this.getAttribute('update-url') || null;
     this.updateTitle = this.getAttribute('update-title') || null;
   }
@@ -160,7 +159,8 @@ class LiquidSectionRenderer extends HTMLElement {
   _buildUrl(sections) {
     if (!sections) return;
 
-    const url = new URL(this.renderUrl, window.location.origin);
+    const renderUrl = this.getAttribute('render-url') || window.location.pathname;
+    const url = new URL(renderUrl, window.location.origin);
     const params = new URLSearchParams(url.search);
     let sectionsParam = '';
 
