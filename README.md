@@ -8,6 +8,7 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 
 ```html
 <liquid-section-renderer
+id="exampleRenders"
   render-url="/products/example-product?variant=10101010"
   loading-selector="#loading"
   loading-class="is-loading"
@@ -42,14 +43,17 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 
 ```html
 <liquid-section-renderer
-    x-data="{ query: '' }"
-    :render-url="`{{ routes.predictive_search_url }}?q=${query}&resources[type]=product`"
-    loading-selector="#searchLoading"
-  >
+  scoped="false"
+  x-data="{ query: '' }"
+  :render-url="`{{ routes.predictive_search_url }}?q=${query}&resources[type]=product`"
+  loading-selector="#searchLoading"
+>
+  <div>
     <input
+      id="searchInput"
       name="q"
+      type="search"
       x-model="query"
-      class="border rounded py-2 px-6"
       placeholder="Search: product name"
       section="predictive-search"
       target="#searchResult"
