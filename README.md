@@ -7,6 +7,12 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 ### Basic Usage
 
 ```html
+<style>
+  [cloak] {
+  display: none;
+}
+</style>
+
 <liquid-section-renderer
 id="exampleRenders"
   render-url="/products/example-product?variant=10101010"
