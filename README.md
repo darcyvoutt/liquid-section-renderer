@@ -28,7 +28,7 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 
 ## Event Listeners
 
-The component automatically binds appropriate events based on the trigger element as follows.
+The component automatically binds appropriate events based on the trigger element as follows. To note, all events have `event.preventDefault()` applied to avoid unintended actions or form submissions.
 
 | Element Type | Event |
 |-------------|-------|
