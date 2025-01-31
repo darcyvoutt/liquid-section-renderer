@@ -1,0 +1,36 @@
+# Operating System
+.DS_Store
+
+# Build/Dependency
+node_modules/
+yarn-error.log
+
+# Environment Files
+.env
+.env.*
+
+# Log Files
+*.log
+*.tmp
+temp/
+.log
+
+# Temporary Files
+*.cache
+*.temp
+*.tmp
+
+# Project Specific
+package-lock.json
+yarn.lock
+.npm/_locks
+.npm/.lock
+
+
+# Build Files
+dist/
+build/
+
+# Debug Files
+.debug/
+.debug/
