@@ -28,13 +28,13 @@ class LiquidSectionRenderer extends HTMLElement {
     };
 
     // Internal variables
-    this._id = `${Math.random().toString(36).substring(2, 10)}`;
     this._loading = false;
     this._loadingElement = null;
     this._timeoutId = null;
     this._triggers = this.querySelectorAll(`[${this._attrs.trigger}]`) || null;
 
     // Parent Attributes
+    this.id = this.getAttribute('id') || `${Math.random().toString(36).substring(2, 10)}`;
     this.debounceTime = parseInt(this.getAttribute('debounce'), 10) || 300;
     this.loadingSelector = this.getAttribute('loading-selector') || null;
     this.loadingClass = this.getAttribute('loading-class') || null;
@@ -185,7 +185,7 @@ class LiquidSectionRenderer extends HTMLElement {
   }
 
   _event(name) {
-    this.dispatchEvent(new CustomEvent(name, { bubbles: true, detail: { id: this._id } }));
+    this.dispatchEvent(new CustomEvent(name, { bubbles: true, detail: { id: this.id } }));
   }
 
   _findElement(selector) {

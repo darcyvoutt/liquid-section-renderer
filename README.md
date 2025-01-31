@@ -69,6 +69,7 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 |-----------|------|---------|-------------|
 | `debounce` | `Integer` | `300` | The time to wait in milliseconds before sending request after a trigger event. |
 | `history-mode` | `String` | `none` | Controls URL history behavior. Accepts `add`/`push`, or `replace`. |
+| `id` | `String` | `Generated` | A unique identifier for the component. |
 | `loading-selector` | `String` | `none` | Uses `querySelector` to find the loading element. If not set, no loading indicator will be shown. |
 | `loading-class` | `String` | `none` | Class to add to loading element while loading. If unset and a `loading-selector` is provided, the component will inline `display: none`. |
 | `render-url` | `String` | `location.pathname` | Specify the URL to request the section from. |
