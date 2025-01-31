@@ -12,6 +12,7 @@ class LiquidSectionRenderer extends HTMLElement {
       textarea: 'input',
     };
     this._attrs = {
+      cloak: 'cloak',
       mode: 'update-mode',
       section: 'section',
       trigger: 'trigger',
@@ -198,6 +199,11 @@ class LiquidSectionRenderer extends HTMLElement {
 
     // Find loading element
     this._loadingElement = this._findElement(this.loadingSelector);
+
+    // Remove cloaks
+    if (this._loadingElement.hasAttribute(this._attrs.cloak)) {
+      this._loadingElement.removeAttribute(this._attrs.cloak);
+    }
 
     // Hide loading element if no loading class is specified
     if (!this.loadingClass && this._loadingElement) {

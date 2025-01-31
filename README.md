@@ -124,3 +124,26 @@ The component includes built-in error handling for the following scenarios:
 - If neither `updates` array nor both `section` and `target` attributes are provided, an error will be thrown
 - If the provided `updates` array structure is invalid, an error will be thrown
 - If a section render request fails or times out, a `liquid-render-error` event will be dispatched
+
+## Hiding Loading Selector on Page Load
+
+If you have are not using classes to hide/show your loading element and wish for the component to hide it using inline `display: none`, you can use the `cloak` attribute to hide the loading element, before the component is initialized. Once the component is initialized, the `cloak` attribute will be removed from the loading element.
+
+Apply the following CSS into your main stylesheet:
+
+```css
+[cloak] {
+  display: none;
+}
+```
+
+Thank add the attribute on your loading element as follows:
+
+```html
+<liquid-section-renderer
+  loading-selector="#loading"
+>
+  <!-- Your content -->
+  <div id="loading">Loading...</div>
+</liquid-section-renderer>
+```
