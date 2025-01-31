@@ -97,7 +97,7 @@ class LiquidSectionRenderer extends HTMLElement {
 
       // Validate updates structure
       if (!this._validateUpdates(updates)) {
-        throw new Error('Invalid updates structure');
+        throw new Error('🚫 Invalid `updates` structure');
       }
 
       this._toggleLoading();
