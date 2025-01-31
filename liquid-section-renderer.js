@@ -26,6 +26,9 @@ class LiquidSectionRenderer extends HTMLElement {
       error: 'liquid-render-error',
       destroy: 'liquid-render-destroying',
     };
+
+    // Internal variables
+    this._id = `${Math.random().toString(36).substring(2, 10)}`;
     this._loading = false;
     this._loadingElement = null;
     this._timeoutId = null;
@@ -182,7 +185,7 @@ class LiquidSectionRenderer extends HTMLElement {
   }
 
   _event(name) {
-    this.dispatchEvent(new CustomEvent(name, { bubbles: true }));
+    this.dispatchEvent(new CustomEvent(name, { bubbles: true, detail: { id: this._id } }));
   }
 
   _findElement(selector) {

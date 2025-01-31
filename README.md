@@ -40,13 +40,13 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `debounce` | `Number` | `300` | The time to wait in milliseconds before sending request after a trigger event. |
+| `debounce` | `Integer` | `300` | The time to wait in milliseconds before sending request after a trigger event. |
 | `history-mode` | `String` | `none` | Controls URL history behavior. Accepts `add`/`push`, or `replace`. |
 | `loading-selector` | `String` | `none` | Uses `querySelector` to find the loading element. If not set, no loading indicator will be shown. |
 | `loading-class` | `String` | `none` | Class to add to loading element while loading. If unset and a `loading-selector` is provided, the component will inline `display: none`. |
 | `render-url` | `String` | `location.pathname` | Specify the URL to request the section from. |
 | `scoped` | `Boolean` | `true` | If set `false`, `querySelector` is scoped the entire `document`, otherwise is scoped to the component. |
-| `timeout` | `Number` | `5000` | The time to wait for a response in milliseconds before cancelling the request. |
+| `timeout` | `Integer` | `5000` | The time to wait for a response in milliseconds before cancelling the request. |
 | `update-url` | `String` | `none` | Update the URL after section is updated. |
 | `update-title` | `String` | `none` | Update the page title if updating page URL. |
 
@@ -75,7 +75,7 @@ The component automatically binds appropriate events based on the trigger elemen
 
 ## Window Events
 
-The component dispatches the following events during the section rendering lifecycle.
+The component dispatches the following events during the section rendering lifecycle. A randomly generated `id` is included in the detail object to differentiate events.
 
 | Event Name | Description |
 |------------|-------------|
