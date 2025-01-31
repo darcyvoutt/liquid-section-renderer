@@ -201,7 +201,7 @@ class LiquidSectionRenderer extends HTMLElement {
     this._loadingElement = this._findElement(this.loadingSelector);
 
     // Remove cloaks
-    if (this._loadingElement.hasAttribute(this._attrs.cloak)) {
+    if (this._loadingElement && this._loadingElement.hasAttribute(this._attrs.cloak)) {
       this._loadingElement.removeAttribute(this._attrs.cloak);
     }
 
