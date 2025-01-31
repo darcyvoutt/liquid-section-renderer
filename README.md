@@ -9,12 +9,12 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 ```html
 <style>
   [cloak] {
-  display: none;
-}
+    display: none;
+  }
 </style>
 
 <liquid-section-renderer
-id="exampleRenders"
+  id="exampleRenders"
   render-url="/products/example-product?variant=10101010"
   loading-selector="#loading"
   loading-class="is-loading"
