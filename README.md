@@ -2,6 +2,40 @@
 
 A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.dev/docs/api/ajax/section-rendering) to dynamically render Shopify sections via AJAX requests.
 
+## Example Usage
+
+```html
+<liquid-section-renderer
+  render-url="/products/example-product?variant=10101010"
+  loading-selector="#loading"
+  loading-class="is-loading"
+  debounce="300"
+  scoped="false"
+>
+  <!-- Single section update -->
+  <button
+    trigger
+    section="main-product"
+    target="#product-section"
+    update-mode="replace"
+  >
+    Update Product
+  </button>
+
+  <!-- Multiple section updates -->
+  <button
+    trigger
+    updates='[
+      {"section": "main-product", "target": "#product-section"},
+      {"section": "product-recommendations", "target": "#recommendations"}
+    ]'
+    update-mode="replace"
+  >
+    Update Multiple Sections
+  </button>
+</liquid-section-renderer>
+```
+
 ## Parent Attributes
 
 | Attribute | Type | Default | Description |
@@ -51,35 +85,10 @@ The component dispatches the following events during the section rendering lifec
 | `liquid-render-ended` | Fired after a section render request ends |
 | `liquid-render-error` | Fired when a section render request fails |
 
-## Example Usage
+## Error Handling
 
-```html
-<liquid-section-renderer
-  render-url="/products/example-product?variant=10101010"
-  loading-selector="#loading"
-  loading-class="is-loading"
-  debounce="300"
-  scoped="false"
->
-  <!-- Single section update -->
-  <button
-    trigger
-    section="main-product"
-    target="#product-section"
-    update-mode="replace"
-  >
-    Update Product
-  </button>
+The component includes built-in error handling for the following scenarios:
 
-  <!-- Multiple section updates -->
-  <button
-    trigger
-    updates='[
-      {"section": "main-product", "target": "#product-section"},
-      {"section": "product-recommendations", "target": "#recommendations"}
-    ]'
-    update-mode="replace"
-  >
-    Update Multiple Sections
-  </button>
-</liquid-section-renderer>
+- If neither `updates` array nor both `section` and `target` attributes are provided, an error will be thrown
+- If the provided `updates` array structure is invalid, an error will be thrown
+- If a section render request fails or times out, a `liquid-render-error` event will be dispatched
