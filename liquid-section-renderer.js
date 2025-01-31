@@ -275,7 +275,8 @@ class LiquidSectionRenderer extends HTMLElement {
 
     // Toggle class or display based on loading state
     if (this.loadingClass) {
-      this._loadingElement.classList.toggle(this.loadingClass, this._loading);
+      const classes = this.loadingClass.split(' ');
+      classes.forEach((cls) => this._loadingElement.classList.toggle(cls, this._loading));
     } else {
       this._loadingElement.style.display = this._loading ? 'block' : 'none';
     }
