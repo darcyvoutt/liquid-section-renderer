@@ -61,6 +61,8 @@ Copy the contents of `liquid-section-renderer.js` into your project into the `as
 |-----------|------|---------|-------------|
 | `debounce` | `Integer` | `300` | The time to wait in milliseconds before sending request after a trigger event. |
 | `history-mode` | `String` | `none` | Controls URL history behavior. Accepts `add`/`push`, or `replace`. |
+| `intersect-margin` | `Integer` | `0` | Margin in pixels around the viewport for intersection observer triggers. |  
+| `intersect-threshold` | `Integer` | `10` | Percentage (1-100) of element that needs to be visible to trigger intersection observer. |
 | `id` | `String` | `random` | A unique identifier for the component. |
 | `loading-selector` | `String` | `none` | Uses `querySelector` to find the loading element. If not set, no loading indicator will be shown. |
 | `loading-class` | `String` | `none` | Class to add to loading element while loading. If unset and a `loading-selector` is provided, the component will inline `display: none`. |
@@ -76,6 +78,7 @@ Copy the contents of `liquid-section-renderer.js` into your project into the `as
 |-----------|------|---------|-------------|
 | `trigger` | `Boolean` | `none` | Determines which element triggers a section update. |
 | `trigger-init` | `Boolean` | `none` | Immediately runs at end of component initialization. |
+| `trigger-intersect` | `Boolean` | `none` | Triggers when element becomes visible in viewport based on intersection observer settings. |
 | `section` | `String` | `none` | The file name reference of the section to render found in `sections/<file-name>.liquid`. |
 | `target` | `String` | `none` | Uses `querySelector` for the element to update with new section content. |
 | `updates` | `Array` | `none` | Array of section/target pairs for updating multiple sections. Format: `[{"section": "section-id", "target": "#selector"}]`. |
