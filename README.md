@@ -133,6 +133,6 @@ Thank add the attribute on your loading element as follows:
   loading-selector="#loading"
 >
   <!-- Your content -->
-  <div id="loading">Loading...</div>
+  <div id="loading" cloak>Loading...</div>
 </liquid-section-renderer>
 ```

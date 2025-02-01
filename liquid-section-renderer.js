@@ -16,6 +16,7 @@ class LiquidSectionRenderer extends HTMLElement {
       mode: 'update-mode',
       section: 'section',
       trigger: 'trigger',
+      triggerIntersect: 'trigger-intersect',
       triggerInit: 'trigger-init',
       target: 'target',
       updates: 'updates',
@@ -30,6 +31,8 @@ class LiquidSectionRenderer extends HTMLElement {
     };
 
     // Internal variables
+    this._observer = null;
+    this._intersects = null;
     this._loading = false;
     this._loadingElement = null;
     this._timeoutId = null;
@@ -37,8 +40,8 @@ class LiquidSectionRenderer extends HTMLElement {
     this._triggerInits = this.querySelectorAll(`[${this._attrs.triggerInit}]`) || null;
 
     // Parent Attributes
-    this.id = this.getAttribute('id') || `${Math.random().toString(36).substring(2, 10)}`;
     this.debounceTime = parseInt(this.getAttribute('debounce'), 10) || 300;
+    this.id = this.getAttribute('id') || `${Math.random().toString(36).substring(2, 10)}`;
     this.loadingSelector = this.getAttribute('loading-selector') || null;
     this.loadingClass = this.getAttribute('loading-class') || null;
     this.historyMode = this.getAttribute('history-mode') || null;
@@ -55,14 +58,16 @@ class LiquidSectionRenderer extends HTMLElement {
     // Set up event listeners on child elements with section-trigger attributes
     this._addEventListeners();
 
-    // Find loading element if specified
+    // Find needed elements
     this._findLoadingElement();
+    this._findIntersectingElements();
 
     // Emit initialization event
     this._event(this._events.init);
 
-    // Handle trigger inits
+    // Handle trigger inits and observe intersections
     this._handleTriggerInits();
+    this._observeIntersections();
   }
 
   disconnectedCallback() {
@@ -81,6 +86,12 @@ class LiquidSectionRenderer extends HTMLElement {
     // Clear references
     this._loadingElement = null;
     this._triggers = null;
+
+    // Clean up observer
+    if (this._observer) {
+      this._observer.disconnect();
+      this._observer = null;
+    }
   }
 
   // Async functions
@@ -205,6 +216,15 @@ class LiquidSectionRenderer extends HTMLElement {
     return element || null;
   }
 
+  _findElements(selector) {
+    const elements = this.scoped ? this.querySelectorAll(selector) : document.querySelectorAll(selector);
+    return elements.length > 0 ? elements : null;
+  }
+
+  _findIntersectingElements() {
+    this._intersects = this._findElements(`[${this._attrs.triggerIntersect}]`)
+  }
+
   _findLoadingElement() {
     if (!this.loadingSelector) return;
 
@@ -276,6 +296,23 @@ class LiquidSectionRenderer extends HTMLElement {
       typeof update.section === 'string' &&
       typeof update.target === 'string'
     );
+  }
+
+  _observeIntersections() {
+    if (!this._intersects) return;
+
+    this._observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        this._handleTrigger(entry.target);
+      });
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1,
+    });
+
+    this._intersects.forEach((el) => this._observer.observe(el));
   }
 
   _requestTimeout() {
