@@ -42,6 +42,8 @@ class LiquidSectionRenderer extends HTMLElement {
     // Parent Attributes
     this.debounceTime = parseInt(this.getAttribute('debounce'), 10) || 300;
     this.id = this.getAttribute('id') || `${Math.random().toString(36).substring(2, 10)}`;
+    this.intersectMargin = `${this.getAttribute('intersect-margin') || 0}px`;
+    this.intersectThreshold = (parseFloat(this.getAttribute('intersect-threshold')) / 100) || 0.1;
     this.loadingSelector = this.getAttribute('loading-selector') || null;
     this.loadingClass = this.getAttribute('loading-class') || null;
     this.historyMode = this.getAttribute('history-mode') || null;
@@ -211,18 +213,18 @@ class LiquidSectionRenderer extends HTMLElement {
     this.dispatchEvent(new CustomEvent(name, { bubbles: true, detail: { id: this.id } }));
   }
 
-  _findElement(selector) {
-    const element = this.scoped ? this.querySelector(selector) : document.querySelector(selector);
+  _findElement(selector, forceScoped = false) {
+    const element = this.scoped || forceScoped ? this.querySelector(selector) : document.querySelector(selector);
     return element || null;
   }
 
-  _findElements(selector) {
-    const elements = this.scoped ? this.querySelectorAll(selector) : document.querySelectorAll(selector);
+  _findElements(selector, forceScoped = false) {
+    const elements = this.scoped || forceScoped ? this.querySelectorAll(selector) : document.querySelectorAll(selector);
     return elements.length > 0 ? elements : null;
   }
 
   _findIntersectingElements() {
-    this._intersects = this._findElements(`[${this._attrs.triggerIntersect}]`)
+    this._intersects = this._findElements(`[${this._attrs.triggerIntersect}]`, true);
   }
 
   _findLoadingElement() {
@@ -305,11 +307,12 @@ class LiquidSectionRenderer extends HTMLElement {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         this._handleTrigger(entry.target);
+        this._observer.unobserve(entry.target); // Stop observing after first trigger
       });
     }, {
       root: null,
-      rootMargin: '0px',
-      threshold: 0.1,
+      rootMargin: this.intersectMargin,
+      threshold: this.intersectThreshold,
     });
 
     this._intersects.forEach((el) => this._observer.observe(el));
