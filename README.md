@@ -47,6 +47,14 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 </liquid-section-renderer>
 ```
 
+## Installation
+
+Copy the contents of `liquid-section-renderer.js` into your project into the `assets/liquid-section-renderer.js` directory. Then include the JS file into your theme as follows:
+
+```html
+<script src="{{ 'liquid-section-renderer.js' | asset_url }}" defer></script>
+```
+
 ## Parent Attributes
 
 | Attribute | Type | Default | Description |
