@@ -50,7 +50,7 @@ class LiquidSectionRenderer extends HTMLElement {
 
   // System functions
   connectedCallback() {
-    if (this._isInvalid()) return;
+    if (this._isInvalidInit()) return;
 
     // Set up event listeners on child elements with section-trigger attributes
     this._addEventListeners();
@@ -104,7 +104,7 @@ class LiquidSectionRenderer extends HTMLElement {
       }
 
       // Validate updates structure
-      if (!this._validateUpdates(updates)) {
+      if (!this._isValidUpdates(updates)) {
         throw new Error('🚫 Invalid `updates` structure');
       }
 
@@ -260,13 +260,22 @@ class LiquidSectionRenderer extends HTMLElement {
     }
   }
 
-  _isInvalid() {
+  _isInvalidInit() {
     if (!this._triggers && !this._triggerInits) {
       console.warn('🚫 At least one trigger is required.');
       return true;
     }
 
     return false;
+  }
+
+  _isValidUpdates(updates) {
+    return updates.every(update =>
+      update &&
+      typeof update === 'object' &&
+      typeof update.section === 'string' &&
+      typeof update.target === 'string'
+    );
   }
 
   _requestTimeout() {
@@ -343,15 +352,6 @@ class LiquidSectionRenderer extends HTMLElement {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  _validateUpdates(updates) {
-    return updates.every(update =>
-      update &&
-      typeof update === 'object' &&
-      typeof update.section === 'string' &&
-      typeof update.target === 'string'
-    );
   }
 }
 
