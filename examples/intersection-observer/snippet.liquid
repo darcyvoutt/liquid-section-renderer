@@ -1,0 +1,26 @@
+{% comment %}
+  Place in project wherever applicable
+
+  Note: This is the product recommendations which uses the intersection observer API.
+{% endcomment %}
+
+{% if template == 'product' %}
+  {% assign intent = 'related' %}
+  <liquid-section-renderer
+    id="productRecommendationsIntersect"
+    render-url="{{ routes.product_recommendations_url }}?product_id={{ product.id }}&limit=4&intent={{ intent }}"
+    intersect-threshold="50"
+    intersect-margin="50"
+  >
+    <div
+      trigger-intersect
+      section="render-product-recommendation"
+      target="[data-product-recommendations]"
+      data-product-recommendations
+    >
+      <!-- Content here -->
+    </div>
+  </liquid-section-renderer>
+{% endif %}
+
+<script src="{{ 'liquid-section-renderer.js' | asset_url }}" defer></script>
