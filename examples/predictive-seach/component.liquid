@@ -11,15 +11,18 @@
     type="search"
     x-model="query"
     placeholder="Search: Boots"
-    section="predictive-search"
+    section="render-predictive-search"
     target="#searchResult"
     update-mode="replace"
     trigger
   />
 
-  <div id="searchLoading" style="display: none;">...Loading</div>
+  <div id="searchLoading" cloak>...Loading</div>
   <div id="searchResult"></div>
 </liquid-section-renderer>
 
 <script src="{{ 'liquid-section-renderer.js' | asset_url }}" defer></script>
+
+{% comment %} External Dependencies {% endcomment %}
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" defer></script>

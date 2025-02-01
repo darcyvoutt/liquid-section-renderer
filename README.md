@@ -42,6 +42,8 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
   >
     Update Multiple Sections
   </button>
+
+  <div id="loading" cloak>...Loading</div>
 </liquid-section-renderer>
 ```
 

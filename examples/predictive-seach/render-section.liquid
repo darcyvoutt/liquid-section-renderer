@@ -1,0 +1,36 @@
+{%- if predictive_search.performed -%}
+  <div class="max-w-2xl mx-auto w-full p-6 mt-2">
+    {%- if predictive_search.resources.products.size > 0 -%}
+      <h3>Products</h3>
+
+      <ul role="list" class="divide-y divide-gray-100">
+        {%- for product in predictive_search.resources.products -%}
+          <li class="flex justify-between gap-x-6 py-5">
+            <a
+              class="flex min-w-0 gap-x-4"
+              href="{{ product.url }}"
+            >
+              {{
+                product.featured_image
+                | image_url: width: 100
+                | image_tag:
+                  width: 100,
+                  alt: product.title,
+                  class: 'size-12 flex-none rounded-full bg-gray-50'
+              }}
+              <span class="min-w-0 flex-auto">
+                <span class="text-sm/6 font-semibold text-gray-900">
+                  {{ product.title }}
+                </span>
+                <span class="mt-1 truncate text-xs/5 text-gray-500">
+                  {% render 'price', target: product.selected_or_first_available_variant %}
+                </span>
+              </span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+    {%- endif -%}
+  </div>
+{%- endif -%}
