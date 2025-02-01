@@ -16,6 +16,7 @@ class LiquidSectionRenderer extends HTMLElement {
       mode: 'update-mode',
       section: 'section',
       trigger: 'trigger',
+      triggerInit: 'trigger-init',
       target: 'target',
       updates: 'updates',
     };
@@ -33,6 +34,7 @@ class LiquidSectionRenderer extends HTMLElement {
     this._loadingElement = null;
     this._timeoutId = null;
     this._triggers = this.querySelectorAll(`[${this._attrs.trigger}]`) || null;
+    this._triggerInits = this.querySelectorAll(`[${this._attrs.triggerInit}]`) || null;
 
     // Parent Attributes
     this.id = this.getAttribute('id') || `${Math.random().toString(36).substring(2, 10)}`;
@@ -58,6 +60,9 @@ class LiquidSectionRenderer extends HTMLElement {
 
     // Emit initialization event
     this._event(this._events.init);
+
+    // Handle trigger inits
+    this._handleTriggerInits();
   }
 
   disconnectedCallback() {
@@ -79,7 +84,7 @@ class LiquidSectionRenderer extends HTMLElement {
   }
 
   // Async functions
-  async _handleEvent(event, trigger) {
+  async _handleTrigger(trigger) {
     try {
       // Get data from updates attribute
       let { updates, sections } = this._getUpdatesArray(trigger);
@@ -120,6 +125,12 @@ class LiquidSectionRenderer extends HTMLElement {
     }
   }
 
+  async _handleTriggerInits() {
+    if (!this._triggerInits) return;
+    const triggerPromises = Array.from(this._triggerInits).map((trigger) => this._handleTrigger(trigger));
+    await Promise.allSettled(triggerPromises);
+  }
+
   async _fetchSections(sections) {
     const url = this._buildUrl(sections);
 
@@ -152,7 +163,7 @@ class LiquidSectionRenderer extends HTMLElement {
 
       const boundListener = (event) => {
         event.preventDefault();
-        this._debounce(() => this._handleEvent(event, trigger), this.debounceTime);
+        this._debounce(() => this._handleTrigger(trigger), this.debounceTime);
       }
 
       this._boundEventListeners.set(trigger, { type: event, listener: boundListener });
@@ -250,7 +261,7 @@ class LiquidSectionRenderer extends HTMLElement {
   }
 
   _isInvalid() {
-    if (!this._triggers) {
+    if (!this._triggers && !this._triggerInits) {
       console.warn('🚫 At least one trigger is required.');
       return true;
     }
@@ -270,17 +281,15 @@ class LiquidSectionRenderer extends HTMLElement {
   _toggleLoading() {
     this._loading = !this._loading;
 
-    // Do nothing if loading element is not found
-    if (!this._loadingElement) return;
-
     // Toggle class or display based on loading state
-    if (this.loadingClass) {
+    if (this._loadingElement && this.loadingClass) {
       const classes = this.loadingClass.split(' ');
       classes.forEach((cls) => this._loadingElement.classList.toggle(cls, this._loading));
-    } else {
+    } else if (this._loadingElement) {
       this._loadingElement.style.display = this._loading ? 'block' : 'none';
     }
 
+    // Emit loading events
     if (this._loading) this._event(this._events.started);
     if (!this._loading) this._event(this._events.ended);
   }
