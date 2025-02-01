@@ -1,0 +1,27 @@
+<div class="mx-auto max-w-[1500px] px-4 py-8">
+  {%- if recommendations.performed? and recommendations.products_count > 0 -%}
+    <h2 class="mb-4">
+      {% if recommendations.intent == 'related' %}
+        You may also like
+      {% elsif recommendations.intent == 'complementary' %}
+        Pair it with
+      {% endif %}
+    </h2>
+
+    <ul class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {%- for product in recommendations.products -%}
+        <li class="col-span-1">
+          <a href="{{ product.url }}" class="flex flex-col gap-3">
+            {{
+              product.featured_image
+                | image_url: width: 300, height: 300
+                | image_tag: width: 300, class: 'aspect-[5/6] object-cover object-center'
+            }}
+            <p class="font-semibold underline">{{ product.title | escape }}</p>
+            <p>{% render 'price', target: product %}</p>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>

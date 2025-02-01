@@ -1,0 +1,16 @@
+{% if template == 'product' %}
+  {% assign intent = 'related' %}
+  <liquid-section-renderer
+    id="productRecommendations"
+    render-url="{{ routes.product_recommendations_url }}?product_id={{ product.id }}&limit=4&intent={{ intent }}"
+  >
+    <div
+      trigger-init
+      section="render-product-recommendation"
+      target="[data-product-recommendations]"
+      data-product-recommendations
+    >
+      <!-- Content here -->
+    </div>
+  </liquid-section-renderer>
+{% endif %}
