@@ -1,0 +1,25 @@
+{% comment %} Predictive Search w/ Alpine JS {% endcomment %}
+<liquid-section-renderer
+  scoped="false"
+  x-data="{ query: '' }"
+  :render-url="`{{ routes.predictive_search_url }}?q=${query}&resources[type]=product`"
+  loading-selector="#searchLoading"
+>
+  <input
+    id="searchInput"
+    name="q"
+    type="search"
+    x-model="query"
+    placeholder="Search: Boots"
+    section="predictive-search"
+    target="#searchResult"
+    update-mode="replace"
+    trigger
+  />
+
+  <div id="searchLoading" style="display: none;">...Loading</div>
+  <div id="searchResult"></div>
+</liquid-section-renderer>
+
+<script src="{{ 'liquid-section-renderer.js' | asset_url }}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" defer></script>

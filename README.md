@@ -45,34 +45,6 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
 </liquid-section-renderer>
 ```
 
-### Predictive Search w/ Alpine JS
-
-```html
-<liquid-section-renderer
-  scoped="false"
-  x-data="{ query: '' }"
-  :render-url="`{{ routes.predictive_search_url }}?q=${query}&resources[type]=product`"
-  loading-selector="#searchLoading"
->
-  <div>
-    <input
-      id="searchInput"
-      name="q"
-      type="search"
-      x-model="query"
-      placeholder="Search: product name"
-      section="predictive-search"
-      target="#searchResult"
-      update-mode="replace"
-      trigger
-    />
-
-    <div id="searchLoading" style="display: none;">...Loading</div>
-    <div id="searchResult"></div>
-  </div>
-</liquid-section-renderer>
-```
-
 ## Parent Attributes
 
 | Attribute | Type | Default | Description |
