@@ -32,12 +32,12 @@ class LiquidSectionRenderer extends HTMLElement {
 
     // Internal variables
     this._observer = null;
-    this._intersects = null;
     this._loading = false;
     this._loadingElement = null;
     this._timeoutId = null;
-    this._triggers = this.querySelectorAll(`[${this._attrs.trigger}]`) || null;
-    this._triggerInits = this.querySelectorAll(`[${this._attrs.triggerInit}]`) || null;
+    this._triggers = null;
+    this._triggerInits = null;
+    this._triggerIntersects = null;
 
     // Parent Attributes
     this.debounceTime = parseInt(this.getAttribute('debounce'), 10) || 300;
@@ -55,6 +55,8 @@ class LiquidSectionRenderer extends HTMLElement {
 
   // System functions
   connectedCallback() {
+    this._findTriggers();
+
     if (this._isInvalidInit()) return;
 
     // Set up event listeners on child elements with section-trigger attributes
@@ -62,7 +64,6 @@ class LiquidSectionRenderer extends HTMLElement {
 
     // Find needed elements
     this._findLoadingElement();
-    this._findIntersectingElements();
 
     // Emit initialization event
     this._event(this._events.init);
@@ -165,6 +166,8 @@ class LiquidSectionRenderer extends HTMLElement {
 
   // Methods
   _addEventListeners() {
+    if (!this._triggers) return;
+
     this._triggers.forEach((trigger) => {
 
       const event = this._getEventType(trigger);
@@ -215,7 +218,7 @@ class LiquidSectionRenderer extends HTMLElement {
 
   _findElement(selector, forceScoped = false) {
     const element = this.scoped || forceScoped ? this.querySelector(selector) : document.querySelector(selector);
-    return element || null;
+    return element.length > 0 ? element : null;
   }
 
   _findElements(selector, forceScoped = false) {
@@ -223,8 +226,10 @@ class LiquidSectionRenderer extends HTMLElement {
     return elements.length > 0 ? elements : null;
   }
 
-  _findIntersectingElements() {
-    this._intersects = this._findElements(`[${this._attrs.triggerIntersect}]`, true);
+  _findTriggers() {
+    this._triggers = this._findElements(`[${this._attrs.trigger}]`) || null;
+    this._triggerInits = this._findElements(`[${this._attrs.triggerInit}]`) || null;
+    this._triggerIntersects = this._findElements(`[${this._attrs.triggerIntersect}]`, true);
   }
 
   _findLoadingElement() {
@@ -283,7 +288,12 @@ class LiquidSectionRenderer extends HTMLElement {
   }
 
   _isInvalidInit() {
-    if (!this._triggers && !this._triggerInits) {
+    console.log('===================', this.id);
+    console.log('this._triggers', this._triggers);
+    console.log('this._triggerInits', this._triggerInits);
+    console.log('this._triggerIntersects', this._triggerIntersects);
+
+    if (!this._triggers && !this._triggerInits && !this._triggerIntersects) {
       console.warn('🚫 At least one trigger is required.');
       return true;
     }
@@ -301,7 +311,7 @@ class LiquidSectionRenderer extends HTMLElement {
   }
 
   _observeIntersections() {
-    if (!this._intersects) return;
+    if (!this._triggerIntersects) return;
 
     this._observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -315,7 +325,7 @@ class LiquidSectionRenderer extends HTMLElement {
       threshold: this.intersectThreshold,
     });
 
-    this._intersects.forEach((el) => this._observer.observe(el));
+    this._triggerIntersects.forEach((el) => this._observer.observe(el));
   }
 
   _requestTimeout() {
