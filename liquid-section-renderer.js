@@ -227,8 +227,8 @@ class LiquidSectionRenderer extends HTMLElement {
   }
 
   _findTriggers() {
-    this._triggers = this._findElements(`[${this._attrs.trigger}]`) || null;
-    this._triggerInits = this._findElements(`[${this._attrs.triggerInit}]`) || null;
+    this._triggers = this._findElements(`[${this._attrs.trigger}]`, true) || null;
+    this._triggerInits = this._findElements(`[${this._attrs.triggerInit}]`, true) || null;
     this._triggerIntersects = this._findElements(`[${this._attrs.triggerIntersect}]`, true);
   }
 
