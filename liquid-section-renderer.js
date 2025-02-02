@@ -170,9 +170,9 @@ class LiquidSectionRenderer extends HTMLElement {
 
     this._triggers.forEach((trigger) => {
 
-      const event = this._getEventType(trigger);
+      const eventType = this._getEventType(trigger);
 
-      if (!event) {
+      if (!eventType) {
         console.warn(`The supported event types are: ${Object.values(this._acceptedEvents).join(', ')}`);
         throw new Error(`Invalid event type: ${trigger.tagName.toLowerCase()}`);
       }
@@ -182,8 +182,8 @@ class LiquidSectionRenderer extends HTMLElement {
         this._debounce(() => this._handleTrigger(trigger), this.debounceTime);
       }
 
-      this._boundEventListeners.set(trigger, { type: event, listener: boundListener });
-      trigger.addEventListener(event, boundListener);
+      this._boundEventListeners.set(trigger, { type: eventType, listener: boundListener });
+      trigger.addEventListener(eventType, boundListener);
     });
   }
 
