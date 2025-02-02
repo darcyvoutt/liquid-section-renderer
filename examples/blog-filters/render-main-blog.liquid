@@ -1,0 +1,94 @@
+{% liquid
+  assign id = 'BlogFilters'
+%}
+
+<liquid-section-renderer
+  id="{{ id }}"
+  x-data="{
+    showPagination: true,
+    selected: '',
+    url: '',
+  }"
+  x-init="
+    document.addEventListener('liquid-render-ended', (event) => {
+      if (event.detail.id !== '{{ id }}') return;
+      showPagination = selected === '';
+    });
+  "
+  :render-url="url"
+>
+  <!-- Tags -->
+  <ul class="flex justify-center items-center gap-6 snap-x snap-mandatory">
+    <li>
+      <a
+        href="{{ blog.url }}"
+        @click.prevent="url = $el.href, selected = ''"
+        :class="{ 'font-semibold underline': selected === '' }"
+        class="tabular-nums"
+        destination="[data-blog]"
+        query="[data-blog]"
+        section="main-blog"
+        trigger
+      >
+        All
+      </a>
+    </li>
+
+    {% for tag in blog.tags %}
+      <li>
+        <a
+          @click.prevent="url = $el.href, selected = '{{ tag | handle }}'"
+          class="tabular-nums"
+          :class="{ 'font-semibold underline': selected === '{{ tag | handle }}' }"
+          href="{{ blog.url }}/tagged/{{ tag | handle }}"
+          destination="[data-blog]"
+          section="main-blog"
+          query="[data-blog]"
+          trigger
+        >
+          {{ tag }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  {%- paginate blog.articles by section.settings.pagination -%}
+    {% # Content %}
+    <div class="main-blog page-width section-{{ section.id }}-padding">
+      <h1 class="title--primary">
+        {{ blog.title | escape }}
+      </h1>
+
+      <div data-blog>
+        <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+          {%- for article in blog.articles -%}
+            <div class="blog-articles__article article pt-8">
+              {%- render 'article-card',
+                article: article,
+                media_height: section.settings.image_height,
+                media_aspect_ratio: article.image.aspect_ratio,
+                show_image: section.settings.show_image,
+                show_date: section.settings.show_date,
+                show_author: section.settings.show_author,
+                show_excerpt: true
+              -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    {% # Pagination %}
+    {%- if paginate.pages > 1 -%}
+      <div x-show="showPagination">
+        {%- render 'pagination', paginate: paginate -%}
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+</liquid-section-renderer>
+
+{% comment %} Classes use Tailwind CSS {% endcomment %}
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+{% comment %} Handling input with Alpine.js {% endcomment %}
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
