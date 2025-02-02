@@ -380,7 +380,6 @@ if (!customElements.get('liquid-section-renderer')) {
 
     _updateHistory() {
       // Update URL
-      console.log('updateURL', this.updateUrl);
       if (this.updateUrl) {
         switch (this.historyMode) {
           case 'add':
@@ -407,7 +406,6 @@ if (!customElements.get('liquid-section-renderer')) {
 
           // If query is set, find query element within section element
           if (query) sectionElement = sectionElement.querySelector(query) || sectionElement;
-          console.log('sectionElement', sectionElement);
 
           // Throw error if target element is not found
           if (!targetElement) throw new Error(`Failed to find target element: ${target}`);
