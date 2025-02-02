@@ -1,5 +1,12 @@
 if (!customElements.get('liquid-section-renderer')) {
   class LiquidSectionRenderer extends HTMLElement {
+    static get observedAttributes() {
+      return [
+        'update-url',
+        'update-title'
+      ];
+    }
+
     constructor() {
       super();
 
@@ -14,7 +21,9 @@ if (!customElements.get('liquid-section-renderer')) {
       };
       this._attrs = {
         cloak: 'cloak',
+        intersectOnce: 'intersect-once',
         mode: 'update-mode',
+        query: 'query',
         section: 'section',
         trigger: 'trigger',
         triggerIntersect: 'trigger-intersect',
@@ -47,7 +56,7 @@ if (!customElements.get('liquid-section-renderer')) {
       this.intersectThreshold = (parseFloat(this.getAttribute('intersect-threshold')) / 100) || 0.1;
       this.loadingSelector = this.getAttribute('loading-selector') || null;
       this.loadingClass = this.getAttribute('loading-class') || null;
-      this.historyMode = this.getAttribute('history-mode') || null;
+      this.historyMode = this.getAttribute('history-mode') || 'replace';
       this.scoped = (this.getAttribute('scoped') || 'true').toLowerCase() === 'true';
       this.timeout = parseInt(this.getAttribute('timeout'), 10) || 5000;
       this.updateUrl = this.getAttribute('update-url') || null;
@@ -72,6 +81,19 @@ if (!customElements.get('liquid-section-renderer')) {
       // Handle trigger inits and observe intersections
       this._handleTriggerInits();
       this._observeIntersections();
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue) return;
+
+      switch (name) {
+        case 'update-url':
+          this.updateUrl = newValue || null;
+          break;
+        case 'update-title':
+          this.updateTitle = newValue || null;
+          break;
+      }
     }
 
     disconnectedCallback() {
@@ -103,18 +125,19 @@ if (!customElements.get('liquid-section-renderer')) {
       try {
         // Get data from updates attribute
         let { updates, sections } = this._getUpdatesArray(trigger);
-        const updateMode = trigger.getAttribute(this._attrs.mode) || 'replace';
 
-        // If attribute is not found, build with section-id, section-target
+        // Get section and target from trigger element with single action
         if (!updates.length) {
           const section = trigger.getAttribute(this._attrs.section) || null;
           const target = trigger.getAttribute(this._attrs.target) || null;
+          const updateMode = trigger.getAttribute(this._attrs.mode) || 'replace';
+          const query = trigger.getAttribute(this._attrs.query) || null;
 
           if (!section || !target) {
             throw new Error('Either `section-id`, `section-target`, or `section-updates` attributes are required');
           }
 
-          updates = [{ section, target }];
+          updates = [{ section, target, updateMode, query }];
           sections = [section];
         }
 
@@ -125,12 +148,13 @@ if (!customElements.get('liquid-section-renderer')) {
 
         this._toggleLoading();
 
-        const sectionsData = await Promise.race([
+        const response = await Promise.race([
           this._fetchSections(sections),
           this._requestTimeout(),
         ]);
 
-        this._updateSection({ sectionsData, updates, updateMode });
+        // Make updates
+        this._updateSection({ response, updates });
         this._updateHistory();
       } catch (error) {
         console.error('Section render failed:', error);
@@ -261,8 +285,8 @@ if (!customElements.get('liquid-section-renderer')) {
 
     _getUpdatesArray(trigger) {
       const result = {
-        updates: [],
         sections: [],
+        updates: [],
       };
 
       try {
@@ -275,9 +299,7 @@ if (!customElements.get('liquid-section-renderer')) {
 
         if (!Array.isArray(updates)) throw new Error('The `section-updates` attribute must be an array');
 
-        const sections = [...new Set(updates.map(update => update.section))];
-
-        result.sections = sections;
+        result.sections = [...new Set(updates.map(update => update.section))];
         result.updates = updates;
 
         return result;
@@ -312,8 +334,18 @@ if (!customElements.get('liquid-section-renderer')) {
       this._observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          this._handleTrigger(entry.target);
-          this._observer.unobserve(entry.target);
+
+          const target = entry.target;
+          const once = (target.getAttribute(this._attrs.intersectOnce) || 'true').toLocaleLowerCase() === 'true';
+
+          this._handleTrigger(target);
+
+          console.log('🚪 Once', once);
+
+          if (once) {
+            console.log('STOP OBSERVING');
+            this._observer.unobserve(target);
+          }
         });
       }, {
         root: null,
@@ -350,31 +382,35 @@ if (!customElements.get('liquid-section-renderer')) {
     }
 
     _updateHistory() {
-      // Do nothing if history mode is not set
-      if (!this.historyMode) return;
-
-      // Update history
-      switch (this.historyMode) {
-        case 'add':
-        case 'push':
-          history.pushState({}, '', this.updateUrl);
-          break;
-        case 'replace':
-          history.replaceState({}, '', this.updateUrl);
-          break;
+      // Update URL
+      console.log('updateURL', this.updateUrl);
+      if (this.updateUrl) {
+        switch (this.historyMode) {
+          case 'add':
+          case 'push':
+            history.pushState({}, '', this.updateUrl);
+            break;
+          case 'replace':
+            history.replaceState({}, '', this.updateUrl);
+            break;
+        }
       }
 
       // Update title
       if (this.updateTitle) document.title = this.updateTitle;
     }
 
-    _updateSection({ sectionsData, updates, updateMode }) {
+    _updateSection({ response, updates }) {
       try {
-        updates.forEach(({ section, target }) => {
-          const data = sectionsData[section];
+        updates.forEach(({ section, target, updateMode, query }) => {
+          const data = response[section];
           const doc = new DOMParser().parseFromString(data, 'text/html');
-          const sectionElement = doc.querySelector(`#shopify-section-${section}`);
           const targetElement = this._findElement(target);
+          let sectionElement = doc.querySelector(`#shopify-section-${section}`);
+
+          // If query is set, find query element within section element
+          if (query) sectionElement = sectionElement.querySelector(query) || sectionElement;
+          console.log('sectionElement', sectionElement);
 
           // Throw error if target element is not found
           if (!targetElement) throw new Error(`Failed to find target element: ${target}`);
