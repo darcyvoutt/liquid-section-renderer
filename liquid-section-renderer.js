@@ -218,12 +218,12 @@ class LiquidSectionRenderer extends HTMLElement {
 
   _findElement(selector, forceScoped = false) {
     const element = this.scoped || forceScoped ? this.querySelector(selector) : document.querySelector(selector);
-    return element.length > 0 ? element : null;
+    return element || null;
   }
 
   _findElements(selector, forceScoped = false) {
     const elements = this.scoped || forceScoped ? this.querySelectorAll(selector) : document.querySelectorAll(selector);
-    return elements.length > 0 ? elements : null;
+    return elements.length > 0 ? Array.from(elements) : null;
   }
 
   _findTriggers() {
@@ -288,11 +288,6 @@ class LiquidSectionRenderer extends HTMLElement {
   }
 
   _isInvalidInit() {
-    console.log('===================', this.id);
-    console.log('this._triggers', this._triggers);
-    console.log('this._triggerInits', this._triggerInits);
-    console.log('this._triggerIntersects', this._triggerIntersects);
-
     if (!this._triggers && !this._triggerInits && !this._triggerIntersects) {
       console.warn('🚫 At least one trigger is required.');
       return true;
@@ -317,7 +312,7 @@ class LiquidSectionRenderer extends HTMLElement {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         this._handleTrigger(entry.target);
-        this._observer.unobserve(entry.target); // Stop observing after first trigger
+        this._observer.unobserve(entry.target);
       });
     }, {
       root: null,
