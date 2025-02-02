@@ -24,12 +24,15 @@ if (!customElements.get('liquid-section-renderer')) {
         intersectOnce: 'intersect-once',
         mode: 'update-mode',
         query: 'query',
+        renderUrl: 'render-url',
         section: 'section',
         trigger: 'trigger',
         triggerIntersect: 'trigger-intersect',
         triggerInit: 'trigger-init',
         target: 'target',
         updates: 'updates',
+        updateTitle: 'update-title',
+        updateUrl: 'update-url',
       };
       this._boundEventListeners = new Map();
       this._events = {
@@ -59,8 +62,8 @@ if (!customElements.get('liquid-section-renderer')) {
       this.historyMode = this.getAttribute('history-mode') || 'replace';
       this.scoped = (this.getAttribute('scoped') || 'true').toLowerCase() === 'true';
       this.timeout = parseInt(this.getAttribute('timeout'), 10) || 5000;
-      this.updateUrl = this.getAttribute('update-url') || null;
-      this.updateTitle = this.getAttribute('update-title') || null;
+      this.updateTitle = this.getAttribute(this._attrs.updateTitle) || null;
+      this.updateUrl = this.getAttribute(this._attrs.updateUrl) || null;
     }
 
     // System functions
@@ -87,11 +90,11 @@ if (!customElements.get('liquid-section-renderer')) {
       if (oldValue === newValue) return;
 
       switch (name) {
-        case 'update-url':
-          this.updateUrl = newValue || null;
-          break;
-        case 'update-title':
+        case this._attrs.updateTitle:
           this.updateTitle = newValue || null;
+          break;
+        case this._attrs.updateUrl:
+          this.updateUrl = newValue || null;
           break;
       }
     }
@@ -215,7 +218,7 @@ if (!customElements.get('liquid-section-renderer')) {
     _buildUrl(sections) {
       if (!sections) return;
 
-      const renderUrl = this.getAttribute('render-url') || window.location.pathname;
+      const renderUrl = this.getAttribute(this._attrs.renderUrl) || window.location.pathname;
       const url = new URL(renderUrl, window.location.origin);
       const params = new URLSearchParams(url.search);
       let sectionsParam = '';
@@ -339,13 +342,7 @@ if (!customElements.get('liquid-section-renderer')) {
           const once = (target.getAttribute(this._attrs.intersectOnce) || 'true').toLocaleLowerCase() === 'true';
 
           this._handleTrigger(target);
-
-          console.log('🚪 Once', once);
-
-          if (once) {
-            console.log('STOP OBSERVING');
-            this._observer.unobserve(target);
-          }
+          if (once) this._observer.unobserve(target);
         });
       }, {
         root: null,
