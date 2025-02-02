@@ -23,7 +23,7 @@
                 | image_tag: width: 300, class: 'aspect-[5/6] object-cover object-center'
             }}
             <p class="font-semibold underline">{{ product.title | escape }}</p>
-            <p>{% render 'price', target: product %}</p>
+            <p>{% render 'price', destination: product %}</p>
           </a>
         </li>
       {%- endfor -%}

@@ -25,7 +25,7 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
   <button
     trigger
     section="main-product"
-    target="#product-section"
+    destination="#product-section"
     update-mode="replace"
   >
     Update Product
@@ -35,8 +35,8 @@ A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.
   <button
     trigger
     updates='[
-      {"section": "main-product", "target": "#product-section"},
-      {"section": "product-recommendations", "target": "#recommendations"}
+      {"section": "main-product", "destination": "#product-section"},
+      {"section": "product-recommendations", "destination": "#recommendations"}
     ]'
     update-mode="replace"
   >
@@ -76,13 +76,13 @@ Copy the contents of `liquid-section-renderer.js` into your project into the `as
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `destination` | `String` | `none` | Uses `querySelector` for the element to update with new section content. |
 | `query` | `String` | `none` | Uses `querySelector` to find element within section. If not found, uses entire section. |
 | `section` | `String` | `none` | The file name reference of the section to render found in `sections/<file-name>.liquid`. |
-| `target` | `String` | `none` | Uses `querySelector` for the element to update with new section content. It is not recommended to use with `<a>` elements. |
 | `trigger` | `Boolean` | `none` | Determines which element triggers a section update. |
 | `trigger-init` | `Boolean` | `none` | Immediately runs at end of component initialization. |
 | `trigger-intersect` | `Boolean` | `none` | Triggers when element becomes visible in viewport based on intersection observer settings. |
-| `updates` | `Array` | `none` | Array of section/target pairs for updating multiple sections. |
+| `updates` | `Array` | `none` | Array of section/destination pairs for updating multiple sections. |
 | `update-mode` | `String` | `replace` | How the new section content is inserted. Accepts `replace`, `append`/`after`, or `prepend`/`before`. |
 
 ## Updates Array
@@ -93,8 +93,8 @@ The following are the included attributes within the `updates` array.
 <button
   updates='[
     {
+     "destination": "#SectionId",
      "section": "section-file-name",
-     "target": "#SectionId",
      "updateMode": "replace",
      "query": "[data-items]"
     }
@@ -133,7 +133,7 @@ The component dispatches the following events during the section rendering lifec
 
 The component includes built-in error handling for the following scenarios:
 
-- If neither `updates` array nor both `section` and `target` attributes are provided, an error will be thrown
+- If neither `updates` array nor both `section` and `destination` attributes are provided, an error will be thrown
 - If the provided `updates` array structure is invalid, an error will be thrown
 - If a section render request fails or times out, a `liquid-render-error` event will be dispatched
 

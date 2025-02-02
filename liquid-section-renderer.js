@@ -21,6 +21,7 @@ if (!customElements.get('liquid-section-renderer')) {
       };
       this._attrs = {
         cloak: 'cloak',
+        destination: 'destination',
         intersectOnce: 'intersect-once',
         mode: 'update-mode',
         query: 'query',
@@ -29,7 +30,6 @@ if (!customElements.get('liquid-section-renderer')) {
         trigger: 'trigger',
         triggerIntersect: 'trigger-intersect',
         triggerInit: 'trigger-init',
-        target: 'target',
         updates: 'updates',
         updateTitle: 'update-title',
         updateUrl: 'update-url',
@@ -129,18 +129,18 @@ if (!customElements.get('liquid-section-renderer')) {
         // Get data from updates attribute
         let { updates, sections } = this._getUpdatesArray(trigger);
 
-        // Get section and target from trigger element with single action
+        // Get section and destination from trigger element with single action
         if (!updates.length) {
           const section = trigger.getAttribute(this._attrs.section) || null;
-          const target = trigger.getAttribute(this._attrs.target) || null;
+          const destination = trigger.getAttribute(this._attrs.destination) || null;
           const updateMode = trigger.getAttribute(this._attrs.mode) || 'replace';
           const query = trigger.getAttribute(this._attrs.query) || null;
 
-          if (!section || !target) {
-            throw new Error('Either `section-id`, `section-target`, or `section-updates` attributes are required');
+          if (!section || !destination) {
+            throw new Error('Either `section`, `destination`, or `updates` attributes are required');
           }
 
-          updates = [{ section, target, updateMode, query }];
+          updates = [{ section, destination, updateMode, query }];
           sections = [section];
         }
 
@@ -327,7 +327,7 @@ if (!customElements.get('liquid-section-renderer')) {
         update &&
         typeof update === 'object' &&
         typeof update.section === 'string' &&
-        typeof update.target === 'string'
+        typeof update.destination === 'string'
       );
     }
 
@@ -338,11 +338,11 @@ if (!customElements.get('liquid-section-renderer')) {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
 
-          const target = entry.target;
-          const once = (target.getAttribute(this._attrs.intersectOnce) || 'true').toLocaleLowerCase() === 'true';
+          const destination = entry.destination;
+          const once = (destination.getAttribute(this._attrs.intersectOnce) || 'true').toLocaleLowerCase() === 'true';
 
-          this._handleTrigger(target);
-          if (once) this._observer.unobserve(target);
+          this._handleTrigger(destination);
+          if (once) this._observer.unobserve(destination);
         });
       }, {
         root: null,
@@ -398,31 +398,31 @@ if (!customElements.get('liquid-section-renderer')) {
 
     _updateSection({ response, updates }) {
       try {
-        updates.forEach(({ section, target, updateMode, query }) => {
+        updates.forEach(({ section, destination, updateMode, query }) => {
           const data = response[section];
           const doc = new DOMParser().parseFromString(data, 'text/html');
-          const targetElement = this._findElement(target);
+          const destinationElement = this._findElement(destination);
           let sectionElement = doc.querySelector(`#shopify-section-${section}`);
 
           // If query is set, find query element within section element
           if (query) sectionElement = sectionElement.querySelector(query) || sectionElement;
 
-          // Throw error if target element is not found
-          if (!targetElement) throw new Error(`Failed to find target element: ${target}`);
+          // Throw error if destination element is not found
+          if (!destinationElement) throw new Error(`Failed to find destination element: ${destination}`);
 
-          // Update targetElement
+          // Update destinationElement
           switch (updateMode) {
             case 'after':
             case 'append':
-              targetElement.appendChild(sectionElement);
+              destinationElement.appendChild(sectionElement);
               break;
             case 'before':
             case 'prepend':
-              targetElement.prepend(sectionElement);
+              destinationElement.prepend(sectionElement);
               break;
             case 'replace':
             case null:
-              targetElement.replaceChildren(sectionElement);
+              destinationElement.replaceChildren(sectionElement);
               break;
           }
         });
