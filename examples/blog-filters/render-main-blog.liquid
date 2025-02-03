@@ -52,26 +52,19 @@
     {% endfor %}
   </ul>
 
-  {%- paginate blog.articles by section.settings.pagination -%}
+  {%- paginate blog.articles by 6 -%}
     {% # Content %}
-    <div class="main-blog page-width section-{{ section.id }}-padding">
-      <h1 class="title--primary">
+    <div>
+      <h1 class="text-5xl">
         {{ blog.title | escape }}
       </h1>
 
       <div data-blog>
-        <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+        <div class="grid grid-cols-2 gap-8">
           {%- for article in blog.articles -%}
             <div class="blog-articles__article article pt-8">
-              {%- render 'article-card',
-                article: article,
-                media_height: section.settings.image_height,
-                media_aspect_ratio: article.image.aspect_ratio,
-                show_image: section.settings.show_image,
-                show_date: section.settings.show_date,
-                show_author: section.settings.show_author,
-                show_excerpt: true
-              -%}
+              {% comment %} Insert article card {% endcomment %}
+              {%- render 'article-card', article: article -%}
             </div>
           {%- endfor -%}
         </div>
