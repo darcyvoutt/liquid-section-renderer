@@ -338,7 +338,7 @@ if (!customElements.get('liquid-section-renderer')) {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
 
-          const destination = entry.destination;
+          const destination = entry.target;
           const once = (destination.getAttribute(this._attrs.intersectOnce) || 'true').toLocaleLowerCase() === 'true';
 
           this._handleTrigger(destination);
