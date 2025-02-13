@@ -2,9 +2,14 @@
 
 A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.dev/docs/api/ajax/section-rendering) to dynamically render Shopify sections via AJAX requests.
 
-## Example
+## Browser Support
 
-### Basic Usage
+This component works in all modern browsers. For older browser support, include the following polyfills:
+
+- Custom Elements: Include @webcomponents/custom-elements
+- URL/URLSearchParams: Include url-polyfill for IE11 support
+
+## Basic Usage
 
 ```html
 <style>

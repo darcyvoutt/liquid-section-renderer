@@ -422,7 +422,8 @@ if (!customElements.get('liquid-section-renderer')) {
               break;
             case 'replace':
             case null:
-              destinationElement.replaceChildren(sectionElement);
+              destinationElement.innerHTML = '';
+              destinationElement.appendChild(sectionElement);
               break;
           }
         });
