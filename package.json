@@ -1,0 +1,23 @@
+{
+  "name": "liquid-section-renderer",
+  "version": "0.1.0",
+  "description": "A Web Component that utilizes Shopify's Section Rendering API to dynamically render Shopify sections via AJAX requests",
+  "main": "dist/liquid-section-renderer.js",
+  "module": "dist/liquid-section-renderer.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "mkdir -p dist && cp src/liquid-section-renderer.js dist/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "section-rendering",
+    "shopify"
+  ],
+  "author": "",
+  "license": "MIT"
+}
