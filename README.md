@@ -88,6 +88,7 @@ Copy the contents of `liquid-section-renderer.js` into your project into the `as
 | `trigger-init` | `Boolean` | `none` | Immediately runs at end of component initialization. |
 | `trigger-intersect` | `Boolean` | `none` | Triggers when element becomes visible in viewport based on intersection observer settings. |
 | `intersect-once` | `Boolean` | `true` | Controls whether the intersection observer trigger fires only once or every time it is intersecting. |
+| `render-url` | `String` | `none` | Override the parent component's `render-url` for this specific trigger. |
 | `update-mode` | `String` | `replace` | How the new section content is inserted. Accepts `replace`, `append`/`after`, or `prepend`/`before`. |
 | `updates` | `Array` | `none` | Array of section/destination pairs for updating multiple sections. |
 

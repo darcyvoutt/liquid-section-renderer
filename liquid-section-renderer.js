@@ -152,7 +152,7 @@ if (!customElements.get('liquid-section-renderer')) {
         this._toggleLoading();
 
         const response = await Promise.race([
-          this._fetchSections(sections),
+          this._fetchSections(sections, trigger),
           this._requestTimeout(),
         ]);
 
@@ -173,8 +173,8 @@ if (!customElements.get('liquid-section-renderer')) {
       await Promise.allSettled(triggerPromises);
     }
 
-    async _fetchSections(sections) {
-      const url = this._buildUrl(sections);
+    async _fetchSections(sections, trigger = null) {
+      const url = this._buildUrl(sections, trigger);
 
       if (!url) throw new Error('Failed to build a URL');
 
@@ -215,10 +215,10 @@ if (!customElements.get('liquid-section-renderer')) {
       });
     }
 
-    _buildUrl(sections) {
+    _buildUrl(sections, trigger = null) {
       if (!sections) return;
 
-      const renderUrl = this.getAttribute(this._attrs.renderUrl) || window.location.pathname;
+      const renderUrl = trigger?.getAttribute(this._attrs.renderUrl) || this.getAttribute(this._attrs.renderUrl) || window.location.pathname;
       const url = new URL(renderUrl, window.location.origin);
       const params = new URLSearchParams(url.search);
       let sectionsParam = '';
