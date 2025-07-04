@@ -148,7 +148,7 @@ The component includes built-in error handling for the following scenarios:
 
 If you have are not using classes to hide/show your loading element and wish for the component to hide it using inline `display: none`, you can use the `cloak` attribute to hide the loading element, before the component is initialized. Once the component is initialized, the `cloak` attribute will be removed from the loading element.
 
-Apply the following CSS into your main stylesheet:
+Apply the following CSS to your main stylesheet:
 
 ```css
 [cloak] {
@@ -156,7 +156,7 @@ Apply the following CSS into your main stylesheet:
 }
 ```
 
-Thank add the attribute on your loading element as follows:
+Add the attribute on your loading element as follows:
 
 ```html
 <liquid-section-renderer
