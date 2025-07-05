@@ -42,6 +42,9 @@ if (!customElements.get('liquid-section-renderer')) {
         error: 'liquid-render-error',
         destroy: 'liquid-render-destroying',
       };
+      this._shopifyAttrs = {
+        section: 'shopify-section',
+      };
 
       // Internal variables
       this._observer = null;
@@ -131,13 +134,25 @@ if (!customElements.get('liquid-section-renderer')) {
 
         // Get section and destination from trigger element with single action
         if (!updates.length) {
-          const section = trigger.getAttribute(this._attrs.section) || null;
-          const destination = trigger.getAttribute(this._attrs.destination) || null;
           const updateMode = trigger.getAttribute(this._attrs.mode) || 'replace';
           const query = trigger.getAttribute(this._attrs.query) || null;
+          let section = trigger.getAttribute(this._attrs.section) || null;
+          let destination = trigger.getAttribute(this._attrs.destination) || null;
+
+          // Set scope to false if section and destination is not set
+          if (!section && !destination) {
+            this.scoped = false;
+          }
+
+          // If section or destination is not set, get it from the closest section
+          if (!section) section = this._getClosestSection(trigger).section;
+          if (!destination) destination = this._getClosestSection(trigger).destination;
+
+          console.log('destination', destination);
+          console.log('section', section);
 
           if (!section || !destination) {
-            throw new Error('Either `section`, `destination`, or `updates` attributes are required');
+            throw new Error('Either `section` or `destination` attributes are required');
           }
 
           updates = [{ section, destination, updateMode, query }];
@@ -242,6 +257,15 @@ if (!customElements.get('liquid-section-renderer')) {
 
     _event(name) {
       this.dispatchEvent(new CustomEvent(name, { bubbles: true, detail: { id: this.id } }));
+    }
+
+    _getClosestSection(trigger) {
+      const parent = trigger.closest(`.${this._shopifyAttrs.section}`);
+      if (!parent) return null;
+      return {
+        section: parent.getAttribute('id').replace('shopify-section-', '').trim(),
+        destination: `#${parent.getAttribute('id')}`,
+      };
     }
 
     _findElement(selector, forceScoped = false) {
