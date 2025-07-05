@@ -9,49 +9,6 @@ This component works in all modern browsers. For older browser support, include 
 - Custom Elements: Include @webcomponents/custom-elements
 - URL/URLSearchParams: Include url-polyfill for IE11 support
 
-## Basic Usage
-
-```html
-<style>
-  [cloak] {
-    display: none;
-  }
-</style>
-
-<liquid-section-renderer
-  id="exampleRenders"
-  render-url="/products/example-product?variant=10101010"
-  loading-selector="#loading"
-  loading-class="is-loading"
-  debounce="300"
-  scoped="false"
->
-  <!-- Single section update -->
-  <button
-    trigger
-    section="main-product"
-    destination="#product-section"
-    update-mode="replace"
-  >
-    Update Product
-  </button>
-
-  <!-- Multiple section updates -->
-  <button
-    trigger
-    updates='[
-      {"section": "main-product", "destination": "#product-section"},
-      {"section": "product-recommendations", "destination": "#recommendations"}
-    ]'
-    update-mode="replace"
-  >
-    Update Multiple Sections
-  </button>
-
-  <div id="loading" cloak>...Loading</div>
-</liquid-section-renderer>
-```
-
 ## Installation
 
 Copy the contents of `liquid-section-renderer.js` into your project into the `assets/liquid-section-renderer.js` directory. Then include the JS file into your theme as follows:
@@ -60,13 +17,179 @@ Copy the contents of `liquid-section-renderer.js` into your project into the `as
 <script src="{{ 'liquid-section-renderer.js' | asset_url }}" defer></script>
 ```
 
+## Examples
+
+### Basic Usage
+
+In the below example, this component finds the closest parent with the class `shopify-section` and replaces the section, including the `<liquid-section-renderer>` element. It also infers that to use the current page's pathname to fetch content from. If you wish to be more specific in what is replaced, then see the following examples.
+
+```html
+<section id="shopify-section-template--16489904341079__main" class="shopify-section section">
+  <!-- Section content before -->
+
+  <liquid-section-renderer>
+    <button trigger>
+      Click to replace Shopify section
+    </button>
+  </liquid-section-renderer>
+
+  <!-- Section content after -->
+</section>
+```
+
+### Render Specific URL
+
+In the below example, this component will make a request to the specified URL using the `render-url` attribute. As well as specifying which section file (eg. `sections/main-product`) to get the data from, and where in the DOM to replace the content using the `destination` attribute. This is useful if you want to get specific content such as product data from a single product.
+
+```html
+<liquid-section-renderer
+  render-url="/products/example-product?variant=10101010"
+>
+  <button
+    trigger
+    section="main-product"
+    destination="#product-content"
+  >
+    Update Product
+  </button>
+
+  <div id="product-content">
+    <!-- Content replaced here -->
+  </div>
+</liquid-section-renderer>
+```
+
+### Multiple Destination Updates
+
+This example is similar to the last, but the `updates` attribute replaces the `section` and `destination` attributes. This allows you to fetch content from a single URL while fetching multiple sections and updating multiple destinations, each mapped individually. This is useful in scenarios such as using a variant selector to update price and badges separately, when updating the entire section would break events or other functionality.
+
+```html
+<liquid-section-renderer
+  render-url="/products/example-product?variant=10101010"
+>
+  <button
+    trigger
+    updates='[
+      {"section": "product-info", "destination": "#product-info"},
+      {"section": "product-recommendations", "destination": "#recommendations"}
+    ]'
+    update-mode="replace"
+  >
+    Update Multiple
+  </button>
+
+  <div id="product-info">
+    <!-- Content replaced here -->
+  </div>
+
+  <div id="recommendations">
+    <!-- Content replaced here -->
+  </div>
+</liquid-section-renderer>
+```
+
+### Trigger on Page Initialization
+
+In the following example, the component will trigger on page initialization. This is useful in scenarios such as using Shopify's Product Recommendations API. In this instance we would be looking for a section file named `sections/render-product-recommendation`, and the destination would be the trigger element itself.
+
+```html
+<liquid-section-renderer
+  render-url="{{ routes.product_recommendations_url }}?product_id={{ product.id }}&limit=4&intent=related"
+>
+  <div
+    trigger-init
+    section="render-product-recommendation"
+    destination="[data-product-recommendations]"
+    data-product-recommendations
+  >
+    <!-- Content will be rendered here -->
+  </div>
+</liquid-section-renderer>
+```
+
+### Trigger with Intersection Observer
+
+We can easily replace `trigger-init` with `trigger-intersect` to trigger the section update when the element becomes visible in the viewport. We can also use the `intersect-margin` attribute to specify in pixels how closer the element needs to be to the viewport to trigger the section update.
+
+```html
+<liquid-section-renderer
+  render-url="{{ routes.product_recommendations_url }}?product_id={{ product.id }}&limit=4&intent=related"
+  intersect-margin="200"
+>
+  <div
+    trigger-intersect
+    section="render-product-recommendation"
+    destination="[data-product-recommendations]"
+    data-product-recommendations
+  >
+    <!-- Content will be rendered here -->
+  </div>
+</liquid-section-renderer>
+```
+
+### Multiple Render URLS
+
+In the following example demonstrates how the `render-url` can be set on the trigger element, allowing for interactions such as paginated collection pages where multiple URLs are needed.
+
+```html
+<liquid-section-renderer>
+  <button
+    trigger
+    render-url="{{ paginate_prev_url }}"
+  >
+    Load previous products
+  </button>
+
+  <!-- Products grid here -->
+
+  <button
+    trigger
+    render-url="{{ paginate_next_url }}"
+  >
+    Load next products
+  </button>
+</liquid-section-renderer>
+```
+
+### Dynamic Attribute Updates
+
+The following examples demonstrates how the its possible to dynamically update attributes such as the `render-url` such as to use it with search. This example utilizes [Alpine JS](https://alpinejs.dev/) for the dynamic input data.
+
+```html
+<liquid-section-renderer
+  id="Search"
+  x-data="{ query: '' }"
+  :render-url="`{{ routes.predictive_search_url }}?q=${query}&resources[type]=product`"
+  loading-selector="#searchInput"
+  loading-class="opacity-50"
+>
+  <div class="max-w-screen-xl mx-auto flex flex-col items-center justify-center gap-4 py-6">
+    <h3>Predictive Search</h3>
+
+    <input
+      name="q"
+      id="searchInput"
+      x-model="query"
+      class="border rounded py-2 px-6 transition-[opacity,color]"
+      placeholder="Search: product name"
+      section="render-predictive-search"
+      destination="#searchResult"
+      update-mode="replace"
+      trigger
+    />
+
+    <div id="searchResult" x-show="query.length > 0"></div>
+  </div>
+</liquid-section-renderer>
+```
+
 ## Parent Attributes
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `debounce` | `Integer` | `300` | The time to wait in milliseconds before sending request after a trigger event. |
 | `history-mode` | `String` | `replace` | Controls URL history behavior. Accepts `add`/`push`, or `replace`. |
-| `intersect-margin` | `Integer` | `0` | Margin in pixels around the viewport for intersection observer triggers. |
+| `intersect-margin` | `Integer` | `0` | Margin in pixels around the viewport for intersection observer triggers. Helps with lazy loading sections that are close to the viewport. |
 | `intersect-threshold` | `Integer` | `10` | Percentage (1-100) of element that needs to be visible to trigger intersection observer. |
 | `id` | `String` | `random` | A unique identifier for the component. |
 | `loading-selector` | `String` | `none` | Uses `querySelector` to find the loading element. If not set, no loading indicator will be shown. |
