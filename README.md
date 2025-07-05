@@ -1,6 +1,9 @@
 # Liquid Section Renderer
 
-A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.dev/docs/api/ajax/section-rendering) to dynamically render Shopify sections via AJAX requests.
+A Web Component that utilizes Shopify's [Section Rendering API](https://shopify.dev/docs/api/ajax/section-rendering) to dynamically render Shopify sections via AJAX requests. For those that are newer to the Section Rendering API, when should you consider using it? There are two most common scenarios that often overlap that include the following:
+
+- To avoid redundant logic between Liquid and JavaScript (eg. product price display)
+- Some data is easier accessible in Liquid with linked objects such as products and variants
 
 ## Browser Support
 
