@@ -16,6 +16,8 @@ This component works in all modern browsers. For older browser support, include 
 
 ### NPM
 
+See the following [NPM page](https://www.npmjs.com/package/liquid-section-renderer) for more information.
+
 ```bash
 npm install liquid-section-renderer
 yarn add liquid-section-renderer
