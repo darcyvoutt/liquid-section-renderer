@@ -1,0 +1,40 @@
+{
+  "name": "liquid-section-renderer",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A web component that simplifies using Shopify's Section Rendering API.",
+  "main": "dist/liquid-section-renderer.js",
+  "module": "dist/liquid-section-renderer.esm.js",
+  "browser": "dist/liquid-section-renderer.min.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "web-component",
+    "liquid",
+    "shopify",
+    "section-rendering",
+    "custom-element"
+  ],
+  "author": "Darcy Voutt",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darcyvoutt/liquid-section-renderer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/darcyvoutt/liquid-section-renderer/issues"
+  },
+  "homepage": "https://github.com/darcyvoutt/liquid-section-renderer#readme",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.9.0"
+  }
+}

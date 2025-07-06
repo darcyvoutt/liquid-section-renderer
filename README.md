@@ -14,7 +14,22 @@ This component works in all modern browsers. For older browser support, include 
 
 ## Installation
 
-Copy the contents of `liquid-section-renderer.js` into your project into the `assets/liquid-section-renderer.js` directory. Then include the JS file into your theme as follows:
+### NPM
+
+```bash
+npm install liquid-section-renderer
+yarn add liquid-section-renderer
+```
+
+To import into your project:
+
+```js
+import 'liquid-section-renderer';
+```
+
+### Manual
+
+Copy the contents of `liquid-section-renderer/dist/liquid-section-renderer.min.js` into your project into the `assets/liquid-section-renderer.js` directory. Then include the JS file into your theme as follows:
 
 ```html
 <script src="{{ 'liquid-section-renderer.js' | asset_url }}" defer></script>
@@ -27,7 +42,7 @@ Copy the contents of `liquid-section-renderer.js` into your project into the `as
 In the below example, this component finds the closest parent with the class `shopify-section` and replaces the section, including the `<liquid-section-renderer>` element. It also infers that to use the current page's pathname to fetch content from. If you wish to be more specific in what is replaced, then see the following examples.
 
 ```html
-<section id="shopify-section-template--16489904341079__main" class="shopify-section section">
+<section id="shopify-section-template--12345678909876__main" class="shopify-section section">
   <!-- Section content before -->
 
   <liquid-section-renderer>
