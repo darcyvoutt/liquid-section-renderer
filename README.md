@@ -42,7 +42,7 @@ Copy the contents of `liquid-section-renderer/dist/liquid-section-renderer.min.j
 In the below example, this component finds the closest parent with the class `shopify-section` and replaces the section, including the `<liquid-section-renderer>` element. It also infers that to use the current page's pathname to fetch content from. If you wish to be more specific in what is replaced, then see the following examples.
 
 ```html
-<section id="shopify-section-template--16489904341079__main" class="shopify-section section">
+<section id="shopify-section-template--12345678909876__main" class="shopify-section section">
   <!-- Section content before -->
 
   <liquid-section-renderer>
