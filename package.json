@@ -1,8 +1,8 @@
 {
   "name": "liquid-section-renderer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "type": "module",
-  "description": "A web component for dynamically rendering Liquid sections",
+  "description": "A web component that simplifies using Shopify's Section Rendering API.",
   "main": "dist/liquid-section-renderer.js",
   "module": "dist/liquid-section-renderer.esm.js",
   "browser": "dist/liquid-section-renderer.min.js",
@@ -19,7 +19,7 @@
     "web-component",
     "liquid",
     "shopify",
-    "section-renderer",
+    "section-rendering",
     "custom-element"
   ],
   "author": "Darcy Voutt",
