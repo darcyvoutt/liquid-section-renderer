@@ -14,7 +14,22 @@ This component works in all modern browsers. For older browser support, include 
 
 ## Installation
 
-Copy the contents of `liquid-section-renderer.js` into your project into the `assets/liquid-section-renderer.js` directory. Then include the JS file into your theme as follows:
+### NPM
+
+```bash
+npm install liquid-section-renderer
+yarn add liquid-section-renderer
+```
+
+To import into your project:
+
+```js
+import 'liquid-section-renderer';
+```
+
+### Manual
+
+Copy the contents of `liquid-section-renderer/dist/liquid-section-renderer.min.js` into your project into the `assets/liquid-section-renderer.js` directory. Then include the JS file into your theme as follows:
 
 ```html
 <script src="{{ 'liquid-section-renderer.js' | asset_url }}" defer></script>
