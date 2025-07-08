@@ -45,15 +45,14 @@ In the below example, this component finds the closest parent with the class `sh
 
 ```html
 <section id="shopify-section-template--12345678909876__main" class="shopify-section section">
-  <!-- Section content before -->
-
+  <!-- Section content before : copy from here -->
   <liquid-section-renderer>
     <button trigger>
       Click to replace Shopify section
     </button>
   </liquid-section-renderer>
 
-  <!-- Section content after -->
+  <!-- Section content after : copy to here -->
 </section>
 ```
 
@@ -283,7 +282,7 @@ The component dispatches the following events during the section rendering lifec
 
 The component includes built-in error handling for the following scenarios:
 
-- If neither `updates` array nor both `section` and `destination` attributes are provided, an error will be thrown
+- If neither `updates` array nor both `section` and `destination` attributes are provided, it will infer the current section it is within
 - If the provided `updates` array structure is invalid, an error will be thrown
 - If a section render request fails or times out, a `liquid-render-error` event will be dispatched
 
