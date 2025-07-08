@@ -9,6 +9,7 @@ on:
 
 jobs:
   validate:
+    name: Validate Pull Request
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR branch
@@ -27,7 +28,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Compare versions
+      - name: ⚖️ Compare versions
         id: compare
         run: |
           PR_VERSION=$(node -p "require('./pr-branch/package.json').version")
