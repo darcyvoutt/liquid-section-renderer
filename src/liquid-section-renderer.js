@@ -1,6 +1,6 @@
 /**
  * LiquidSectionRenderer - A web component for dynamically rendering Liquid sections
- * 
+ *
  * Features:
  * - Dynamic section rendering via AJAX
  * - Support for multiple trigger types (click, submit, input, etc.)
@@ -145,26 +145,26 @@ class LiquidSectionRenderer extends HTMLElement {
 
       // Get section and destination from trigger element with single action
       if (!updates.length) {
+        const closestSection = this._getClosestSection(trigger);
         const updateMode = trigger.getAttribute(this._attrs.mode) || 'replace';
         const query = trigger.getAttribute(this._attrs.query) || null;
         let section = trigger.getAttribute(this._attrs.section) || null;
         let destination = trigger.getAttribute(this._attrs.destination) || null;
 
+        if ((!section || !destination) && !closestSection) {
+          console.warn(`If no 'section' or 'destination' attributes are set, <liquid-section-renderer> must be within a section with class "${this._shopifyAttrs.section}".`);
+          throw new Error(`Instance "${this.id}" could not find closest parent Shopify section.`);
+        }
+
         // Set scope to false if section and destination is not set
-        if (!section && !destination) {
+        if ((!section && !destination) && closestSection) {
           this.scoped = false;
         }
 
+
         // If section or destination is not set, get it from the closest section
-        if (!section) section = this._getClosestSection(trigger).section;
-        if (!destination) destination = this._getClosestSection(trigger).destination;
-
-        console.log('destination', destination);
-        console.log('section', section);
-
-        if (!section || !destination) {
-          throw new Error('Either `section` or `destination` attributes are required');
-        }
+        if (!section) section = closestSection.section;
+        if (!destination) destination = closestSection.destination;
 
         updates = [{ section, destination, updateMode, query }];
         sections = [section];
@@ -172,7 +172,7 @@ class LiquidSectionRenderer extends HTMLElement {
 
       // Validate updates structure
       if (!this._isValidUpdates(updates)) {
-        throw new Error('🚫 Invalid `updates` structure');
+        throw new Error('Invalid `updates` structure');
       }
 
       this._toggleLoading();
