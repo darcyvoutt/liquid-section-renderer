@@ -68,12 +68,12 @@ class LiquidSectionRenderer extends HTMLElement {
 
     // Parent Attributes
     this.debounceTime = parseInt(this.getAttribute('debounce'), 10) || 300;
+    this.historyMode = this.getAttribute('history-mode') || 'replace';
     this.id = this.getAttribute('id') || `${Math.random().toString(36).substring(2, 10)}`;
     this.intersectMargin = `${this.getAttribute('intersect-margin') || 0}px`;
     this.intersectThreshold = (parseFloat(this.getAttribute('intersect-threshold')) / 100) || 0.1;
     this.loadingSelector = this.getAttribute('loading-selector') || null;
     this.loadingClass = this.getAttribute('loading-class') || null;
-    this.historyMode = this.getAttribute('history-mode') || 'replace';
     this.scoped = (this.getAttribute('scoped') || 'true').toLowerCase() === 'true';
     this.timeout = parseInt(this.getAttribute('timeout'), 10) || 5000;
     this.updateTitle = this.getAttribute(this._attrs.updateTitle) || null;
