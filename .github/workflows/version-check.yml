@@ -1,0 +1,43 @@
+name: Package Version Check
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'package.json'
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          path: pr-branch
+          
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          path: main-branch
+          
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Compare versions
+        id: compare
+        run: |
+          PR_VERSION=$(node -p "require('./pr-branch/package.json').version")
+          MAIN_VERSION=$(node -p "require('./main-branch/package.json').version")
+          
+          echo "PR version: $PR_VERSION"
+          echo "Main version: $MAIN_VERSION"
+          
+          if [ "$PR_VERSION" == "$MAIN_VERSION" ]; then
+            echo "::error::Package version must be updated in PR. Current version $PR_VERSION is the same as main branch."
+            exit 1
+          else
+            echo "Version check passed. PR version ($PR_VERSION) is different from main version ($MAIN_VERSION)."
+          fi
