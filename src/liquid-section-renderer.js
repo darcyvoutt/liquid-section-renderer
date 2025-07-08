@@ -152,7 +152,7 @@ class LiquidSectionRenderer extends HTMLElement {
         let destination = trigger.getAttribute(this._attrs.destination) || null;
 
         if ((!section || !destination) && !closestSection) {
-          console.warn(`If no 'section' or 'destination' attributes are set, <liquid-section-renderer> must be within a section with class "${this._shopifyAttrs.section}".`);
+          console.warn(`If no 'section' or 'destination' attributes are set, <liquid-section-renderer> must be within a section with class '${this._shopifyAttrs.section}'.`);
           throw new Error(`Instance "${this.id}" could not find closest parent Shopify section.`);
         }
 
