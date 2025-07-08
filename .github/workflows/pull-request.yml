@@ -33,12 +33,9 @@ jobs:
           PR_VERSION=$(node -p "require('./pr-branch/package.json').version")
           MAIN_VERSION=$(node -p "require('./main-branch/package.json').version")
 
-          echo "PR version: $PR_VERSION"
-          echo "Main version: $MAIN_VERSION"
-
           if [ "$PR_VERSION" == "$MAIN_VERSION" ]; then
-            echo "::error::Package version must be updated in PR. Current version $PR_VERSION is the same as main branch."
+            echo "::error::Version must be updated, matches default branch version of $MAIN_VERSION"
             exit 1
           else
-            echo "Version check passed. PR version ($PR_VERSION) is different from main version ($MAIN_VERSION)."
+            echo "::notice::Version check passed, PR version ($PR_VERSION) is different from default branch version ($MAIN_VERSION)."
           fi
