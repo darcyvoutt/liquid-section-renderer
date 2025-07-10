@@ -1,0 +1,59 @@
+name: Build and Add to Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Zip dist directory
+        run: |
+          cd dist
+          zip -r ../liquid-section-renderer.zip .
+          cd ..
+
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.3.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Upload build artifacts to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./liquid-section-renderer.zip
+          asset_name: liquid-section-renderer.zip
+          asset_content_type: application/zip
+
+      - name: Upload individual dist files to release
+        run: |
+          for file in dist/*; do
+            filename=$(basename $file)
+            echo "Uploading $filename to release"
+            curl -X POST \
+              -H "Authorization: token ${{ github.token }}" \
+              -H "Content-Type: $(file -b --mime-type $file)" \
+              --data-binary @$file \
+              "${{ steps.get_release.outputs.upload_url }}?name=$filename"
+          done
