@@ -1,6 +1,6 @@
 {
   "name": "liquid-section-renderer",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "description": "A web component that simplifies using Shopify's Section Rendering API.",
   "main": "dist/liquid-section-renderer.js",
