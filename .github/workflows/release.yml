@@ -1,4 +1,4 @@
-name: Build and Add to Release
+name: Release
 
 on:
   release:
