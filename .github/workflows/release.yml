@@ -5,7 +5,8 @@ on:
     types: [created]
 
 jobs:
-  build-and-upload:
+  release:
+    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,7 +20,7 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build project
         run: npm run build
