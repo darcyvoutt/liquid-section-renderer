@@ -1,0 +1,51 @@
+name: Auto Tag on Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tag-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch all history and tags
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Get version from package.json
+        id: package-version
+        run: |
+          # Extract version without the 'v' prefix
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "TAG_NAME=v$VERSION" >> $GITHUB_ENV
+
+      - name: Check if tag exists
+        id: check-tag
+        run: |
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+            echo "FINAL_TAG=v$VERSION-supplemental" >> $GITHUB_ENV
+            echo "Tag v$VERSION already exists, will use v$VERSION-supplemental"
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+            echo "FINAL_TAG=v$VERSION" >> $GITHUB_ENV
+            echo "Tag v$VERSION does not exist yet"
+          fi
+
+      - name: Create and push tag
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag -a ${{ env.FINAL_TAG }} -m "Release ${{ env.FINAL_TAG }}"
+          git push origin ${{ env.FINAL_TAG }}
+          echo "Successfully created and pushed tag: ${{ env.FINAL_TAG }}"
